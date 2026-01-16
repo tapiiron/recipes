@@ -1,1 +1,1 @@
-insert into tag(id,name) values (1,'Indian');
+insert into tag(name) values ('Indian');

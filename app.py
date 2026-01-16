@@ -2,7 +2,7 @@ import sqlite3
 import re
 
 from flask import Flask
-from flask import render_template,abort,flash,make_response,redirect,request,session
+from flask import render_template,flash,redirect,request,session
 
 import markupsafe
 
