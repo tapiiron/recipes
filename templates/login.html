@@ -1,8 +1,14 @@
-{% extends "layout.html" %}
+{% extends "page_layout.html" %}
 
 {% block title %}Login{% endblock %}
 
 {% block content %}
-	<h1>Recipes for fun</h1>
-	<div>Moikkamoi</div>
+	<h2>Recipes for fun - login</h2>
+	<form method="post" action="/user/login">
+		<label for="username">Username:</label>
+		<input type="text" id="username" name="username" required><br><br>
+		<label for="password">Password:</label>
+		<input type="password" id="password" name="password" required><br><br>
+		<input type="submit" value="Login">
+	</form>
 {% endblock %}
