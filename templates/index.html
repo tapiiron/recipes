@@ -1,7 +1,11 @@
 {% extends "page_layout.html" %}
 
-{% block title %}Register{% endblock %}
+{% block title %}Frontpage{% endblock %}
 
 {% block content %}
 	<div>Moikkamoi {% if session %}</div>
+	{% if recipes is None: %}
+	<h3>No recipies available yet</h3>
+	{% else: %}
+	
 {% endblock %}
