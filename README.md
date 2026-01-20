@@ -26,9 +26,13 @@ recipe
  - instructions
  - picture
 
-recipe_classification
+tag
+- id
+- name
+
+recipe_tag
  - id_recipe fk recipe
- - classification
+ - id_tag fk tag
 
 recipe_comment
  - id_recipe fk recipe
