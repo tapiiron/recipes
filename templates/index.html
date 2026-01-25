@@ -3,9 +3,9 @@
 {% block title %}Frontpage{% endblock %}
 
 {% block content %}
-	<div>Moikkamoi {% if session %}</div>
-	{% if recipes is None: %}
+	{% if recipes == None %}
 	<h3>No recipies available yet</h3>
-	{% else: %}
-	
+	{% else %}
+	{% endif %}
+	<a href="/recipe/add">Add recipe</a>
 {% endblock %}

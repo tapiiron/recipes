@@ -6,5 +6,8 @@ def list_recipies():
     if not result:
         return None
     else:
-        return result
+        results = []
+        for res in results:
+            results.append(res['name'])
+        return results
 
