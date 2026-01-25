@@ -41,9 +41,16 @@ def add_recipe(id_user,name,incredients,instructions,tags):
 def update_recipe(id,name,incredients,instructions):
     db.execute("update recipe set name=?,incredients=?,instructions=? where id=?",[name,incredients,instructions,id])
 
+def remove_recipe(id):
+    db.execute("delete from recipe_comment where id_recipe=?",[id])
+    db.execute("delete from recipe_tag where id_recipe=?",[id])
+    db.execute("delete from recipe where id=?",[id])
+
 def get_image(id):
     result = db.query("select picture from recipe where id=?",[id])
     return result[0]["picture"]
 
 def update_picture(id,picture):
     db.execute("update recipe set picture=? where id=?",[picture,id])
+
+

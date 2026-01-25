@@ -30,5 +30,6 @@
 		</select><br><br>
 		<input type="submit" value="Edit Recipe">
 		{{ recipe.tags }}
-	</form>
+	</form><br><br>
+	<a href="/recipe/remove/{{recipe.id}}">Remove this recipe</a>
 {% endblock %}

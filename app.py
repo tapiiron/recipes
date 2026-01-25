@@ -109,6 +109,16 @@ def display_recipe(id):
     else:
         return redirect("/")
 
+@app.route("/recipe/remove/<int:id>")
+def remove_recipe(id):
+    checksession()
+    recipe = recipecontrol.load_recipe(id)
+    if recipe[0]['id_user']!=session['user_id']:
+        abort(403)
+    recipecontrol.remove_recipe(id)
+    flash("Removed recipe "+recipe[0]['name'])
+    return redirect("/")
+
 @app.route("/recipe/image/get/<int:id>")
 def show_recipe_image(id):
     image = recipecontrol.get_image(id)
