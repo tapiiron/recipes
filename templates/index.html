@@ -6,6 +6,13 @@
 	{% if recipes == None %}
 	<h3>No recipies available yet</h3>
 	{% else %}
+	<table>
+	{% for recipe in recipes %}
+	<tr><td><a href="/recipe/display/{{recipe.id}}">{{recipe.name}}</a></td><td>{% if recipe.id_user==session['user_id'] %}<a href="/recipe/edit/{{recipe.id}}">Edit</a>{% endif %}</td></tr>
+	{% endfor %}
 	{% endif %}
+	</table>
+	{% if session["user_id"] %}
 	<a href="/recipe/add">Add recipe</a>
+	{% endif %}
 {% endblock %}

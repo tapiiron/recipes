@@ -1,14 +1,25 @@
 {% extends "page_layout.html" %}
 
-{% block title %}Login{% endblock %}
+{% block title %}Add Recipe{% endblock %}
 
 {% block content %}
-	<h2>Recipes for fun - Add Recipe</h2>
+
+	<h2>Add Recipe</h2>
 	<form method="post" action="/recipe/add">
-		<label for="username">Username:</label>
-		<input type="text" id="username" name="username" required><br><br>
-		<label for="password">Password:</label>
-		<input type="password" id="password" name="password" required><br><br>
-		<input type="submit" value="Login">
+		<label for="name">Name of the Recipe:</label>
+		<input type="text" id="name" name="name" required><br><br>
+		<label for="incredients">Incredients:</label>
+		<input type="text" id="incredients" name="incredients" required><br><br>
+		<label for="instructions">Instructions:</label>
+		<input type="text" id="instructions" name="instructions" required><br><br>
+		<!--label for="picture">Picture:</label>
+		<input type="file" id="picture" name="picture" accept=".jpg"><br><br-->
+		<label for="tags">Tags:</label>
+		<select name="tags" id="tags" multiple>
+			{% for tag in tags %}
+			<option value="{{tag.id}}">{{tag.name}}</option>
+			{% endfor %}
+		</select><br><br>
+		<input type="submit" value="Add Recipe">
 	</form>
 {% endblock %}

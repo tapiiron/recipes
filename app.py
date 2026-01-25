@@ -2,7 +2,7 @@ import sqlite3
 import re
 
 from flask import Flask
-from flask import render_template,flash,redirect,request,session
+from flask import render_template,flash,redirect,request,session,abort,make_response
 
 import markupsafe
 
@@ -14,6 +14,10 @@ import config
 app = Flask(__name__)
 app.secret_key = config.secret_key
 
+def checksession():
+    if session.get("user_id") == None:
+        abort(403)
+    
 @app.route("/")
 def index():
     recipes = recipecontrol.list_recipies()
@@ -36,7 +40,7 @@ def user_create():
     except sqlite3.IntegrityError:
         flash("Error: Username already in use")
         return redirect("/user/register")
-    return redirect("/")
+    return redirect("/user/login")
 
 @app.route("/user/login",methods=["GET","POST"])
 def user_login():
@@ -62,7 +66,72 @@ def user_logout():
 
 @app.route("/recipe/add",methods=["GET","POST"])
 def recipe_add():
+    checksession()
     if request.method == "GET":
-        return render_template("recipe_add.html")
+        tags = recipecontrol.list_tags()
+        return render_template("recipe_add.html",tags=tags)
+    else:
+        user_id = session["user_id"]
+        name = request.form["name"]
+        incredients = request.form["incredients"]
+        instructions = request.form["instructions"]
+        # picture = request.form['picture']
+        tags = []
+        if request.form.getlist("tags"):
+            tags = request.form.getlist("tags")
+
+        
+
+        recipecontrol.add_recipe(user_id,name,incredients,instructions,tags)
+        
+        # session["user_id"],request.form['name'],request.form['incredients'],request.form['instructions'],request.form['picture']
+        flash("Recipe added")
+        return redirect("/")
+    
+@app.route("/recipe/edit/<int:id>",methods=["GET","POST"])
+def recipe_edit(id):
+    checksession()
+    recipe = recipecontrol.load_recipe(id)
+    if recipe[0]['id_user']!=session['user_id']:
+        abort(403)
+    tags = recipecontrol.list_tags()
+    if request.method == "GET":
+        return render_template("recipe_edit.html",recipe=recipe[0],tags=tags)
+    else:
+        recipecontrol.update_recipe(id,request.form['name'],request.form['incredients'],request.form['instructions'])
+        return redirect("/recipe/edit/"+str(id))
+    
+@app.route("/recipe/display/<int:id>")
+def display_recipe(id):
+    recipe = recipecontrol.load_recipe(id)
+    if recipe:
+        return render_template("recipe_display.html",recipe=recipe[0])
     else:
         return redirect("/")
+
+@app.route("/recipe/image/get/<int:id>")
+def show_recipe_image(id):
+    image = recipecontrol.get_image(id)
+    if not image:
+        abort(404)
+
+    response = make_response(bytes(image))
+    response.headers.set("Content-Type", "image/jpeg")
+    return response
+
+@app.route("/recipe/image/upload/<int:id>",methods=['POST'])
+def upload_image(id):
+    checksession()
+    file = request.files['image']
+    if not file.filename.endswith(".jpg"):
+        flash("ERROR: wrong picture format")
+        return redirect("/recipe/edit/"+str(id))
+    
+    image = file.read()
+
+    if len(image) > 100 * 1024:
+        flash("ERROR: Too large image")
+        return redirect("/recipe/edit/"+str(id))
+    
+    recipecontrol.update_picture(id,image)
+    return redirect("/recipe/edit/"+str(id))

@@ -1,0 +1,34 @@
+{% extends "page_layout.html" %}
+
+{% block title %}Edit Recipe{% endblock %}
+
+{% block content %}
+
+	<h2>Edit Recipe</h2>
+	{% if recipe.picture != None %}
+		<div id="imagecontainer"><img src="/recipe/image/get/{{recipe.id}}" alt="recipeimage"></div>
+	{%endif%}
+	<form method="post" enctype="multipart/form-data" action="/recipe/image/upload/{{recipe.id}}">
+		<label for="image">Upload image:</label>
+		<input type="file" accept=".jpg" name="image">
+		<input type="submit" value="Upload">
+	</form><br><br>
+	<form method="post" action="/recipe/edit/{{recipe.id}}">
+		<label for="name">Name of the Recipe:</label>
+		<input type="text" id="name" name="name" required value="{{recipe.name}}"><br><br>
+		<label for="incredients">Incredients:</label>
+		<input type="text" id="incredients" name="incredients" required value="{{recipe.incredients}}"><br><br>
+		<label for="instructions">Instructions:</label>
+		<input type="text" id="instructions" name="instructions" required value="{{recipe.instructions}}"><br><br>
+		<!--label for="picture">Picture:</label>
+		<input type="file" id="picture" name="picture" accept=".jpg"><br><br-->
+		<label for="tags">Tags:</label>
+		<select name="tags" id="tags" multiple>
+			{% for tag in tags %}
+			<option value="{{tag.id}}">{{tag.name}}</option>
+			{% endfor %}
+		</select><br><br>
+		<input type="submit" value="Edit Recipe">
+		{{ recipe.tags }}
+	</form>
+{% endblock %}
