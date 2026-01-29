@@ -8,23 +8,35 @@ def list_recipies():
     else:
         return result
 
+def search_recipies(search,tag):
+    query="select id,id_user,name from recipe where (lower(name) like ? or lower(incredients) like ? or lower(instructions) like ?)"
+    params=['%'+search+'%','%'+search+'%','%'+search+'%']
+    if tag:
+        query += " and id in (select id_recipe from recipe_tag where id_tag=?)"
+        params.append(tag)
+    result = db.query(query,params)
+    if not result:
+        return None
+    else:
+        return result
+
 def load_recipe(id):
-    result = db.query("select id,id_user,name,incredients,instructions,picture,group_concat((select id_tag from recipe_tag where id_recipe=r.id)) tags " \
+    result = db.query("select id,id_user,name,incredients,instructions,picture,ifnull(group_concat((select id_tag from recipe_tag where id_recipe=r.id)),'0') tags " \
     "from recipe r where r.id=?",[id])
     if not result:
         return None
     else:
         return result
     
-def list_recipe_tags(id):
-    result = db.query("select id,name,(select count(*) from recipe_tag where id_tag=t.id and id_recipe=?) selected from tags t",[id])
+def list_recipe_tag_ids(id):
+    result = db.query("select ''||id_tag id from recipe_tag where id_recipe=?",[id])
     if not result:
         return None
     else:
         return result
 
 def list_tags():
-    result = db.query("select id,name from tag order by name")
+    result = db.query("select ''||id id,name from tag order by name")
     if not result:
         return None
     else:
@@ -38,7 +50,10 @@ def add_recipe(id_user,name,incredients,instructions,tags):
     for tag in tags:
         db.execute("insert into recipe_tag(id_recipe,id_tag) values (?,?)",[inserted_id,tag])
 
-def update_recipe(id,name,incredients,instructions):
+def update_recipe(id,name,incredients,instructions,tags):
+    db.execute("delete from recipe_tag where id_recipe=?",[id])
+    for tag in tags:
+        db.execute("insert into recipe_tag(id_recipe,id_tag) values (?,?)",[id,tag])
     db.execute("update recipe set name=?,incredients=?,instructions=? where id=?",[name,incredients,instructions,id])
 
 def remove_recipe(id):

@@ -25,7 +25,7 @@
 		<label for="tags">Tags:</label>
 		<select name="tags" id="tags" multiple>
 			{% for tag in tags %}
-			<option value="{{tag.id}}">{{tag.name}}</option>
+			<option value="{{tag.id}}"{% if tag['id'] in tagged %} selected{%endif%}>{{tag.name}}</option>
 			{% endfor %}
 		</select><br><br>
 		<input type="submit" value="Edit Recipe">

@@ -18,10 +18,15 @@ def checksession():
     if session.get("user_id") == None:
         abort(403)
     
-@app.route("/")
+@app.route("/",methods=["GET","POST"])
 def index():
-    recipes = recipecontrol.list_recipies()
-    return render_template("index.html",recipes=recipes)
+    tags = recipecontrol.list_tags()
+    if request.method == "GET":
+        recipes = recipecontrol.list_recipies()
+        return render_template("index.html",recipes=recipes,tags=tags)
+    else:
+        recipes = recipecontrol.search_recipies(request.form["search"].lower(),request.form["tag"])
+        return render_template("index.html",recipes=recipes,tags=tags)
 
 @app.route("/user/register")
 def register():
@@ -80,8 +85,6 @@ def recipe_add():
         if request.form.getlist("tags"):
             tags = request.form.getlist("tags")
 
-        
-
         recipecontrol.add_recipe(user_id,name,incredients,instructions,tags)
         
         # session["user_id"],request.form['name'],request.form['incredients'],request.form['instructions'],request.form['picture']
@@ -95,10 +98,17 @@ def recipe_edit(id):
     if recipe[0]['id_user']!=session['user_id']:
         abort(403)
     tags = recipecontrol.list_tags()
+    tagged_raw=recipecontrol.list_recipe_tag_ids(id)
+    tagged=[]
+    for tag in tagged_raw:
+        tagged.append(tag['id'])
     if request.method == "GET":
-        return render_template("recipe_edit.html",recipe=recipe[0],tags=tags)
+        return render_template("recipe_edit.html",recipe=recipe[0],tags=tags,tagged=tagged)
     else:
-        recipecontrol.update_recipe(id,request.form['name'],request.form['incredients'],request.form['instructions'])
+        tags = []
+        if request.form.getlist("tags"):
+            tags = request.form.getlist("tags")
+        recipecontrol.update_recipe(id,request.form['name'],request.form['incredients'],request.form['instructions'],tags)
         return redirect("/recipe/edit/"+str(id))
     
 @app.route("/recipe/display/<int:id>")

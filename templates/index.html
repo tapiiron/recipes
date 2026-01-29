@@ -3,6 +3,18 @@
 {% block title %}Frontpage{% endblock %}
 
 {% block content %}
+<form method="POST" action="/">
+		<label for="search">Search recipes</label>
+		<input type="text" name="search" id="search">
+		<label for="tag">Tag</label>
+		<select name="tag">
+			<option value=""> </option>
+			{% for tag in tags %}
+			<option value="{{tag.id}}">{{tag.name}}</option>
+			{% endfor %}
+		</select>
+		<input type="submit" value="Search">
+	</form><a href="/">Clear</a><br><br>	
 	{% if recipes == None %}
 	<h3>No recipies available yet</h3>
 	{% else %}
