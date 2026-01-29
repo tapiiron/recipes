@@ -8,7 +8,7 @@ Requirements
 + User can see all recipes added
 + User can search recipes
 - Userpage shows how many recipes user have added and list of own recipes
-- User can select recipe one or more classifications like starter, indian or vegan
++ User can select recipe one or more tags like starter, indian or vegan
 - User can give comments to recipes and grade them
 - In a recipe you can see all comments and average rating
 
