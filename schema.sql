@@ -24,6 +24,7 @@ create table recipe_tag(
 );
 
 create table recipe_comment(
+ id integer primary key autoincrement,
  id_recipe integer references recipe(id),
  id_user integer references user(id),
  comment text,

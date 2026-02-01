@@ -21,7 +21,7 @@ def search_recipies(search,tag):
         return result
 
 def load_recipe(id):
-    result = db.query("select id,id_user,name,incredients,instructions,picture,ifnull(group_concat((select id_tag from recipe_tag where id_recipe=r.id)),'0') tags " \
+    result = db.query("select id,id_user,name,incredients,instructions,picture,ifnull(group_concat((select name from recipe_tag where id_recipe=r.id)),'') tags " \
     "from recipe r where r.id=?",[id])
     if not result:
         return None
@@ -68,4 +68,5 @@ def get_image(id):
 def update_picture(id,picture):
     db.execute("update recipe set picture=? where id=?",[picture,id])
 
-
+def add_comment(id_recipe,id_user,comment,grade):
+    db.execute("insert into recipe_comment(id_recipe,id_user,comment,grade) values(?,?,?,?)",[id_recipe,id_user,comment,grade])

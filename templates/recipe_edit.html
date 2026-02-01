@@ -17,17 +17,16 @@
 		<label for="name">Name of the Recipe:</label>
 		<input type="text" id="name" name="name" required value="{{recipe.name}}"><br><br>
 		<label for="incredients">Incredients:</label>
-		<input type="text" id="incredients" name="incredients" required value="{{recipe.incredients}}"><br><br>
+		<textarea type="text" id="incredients" name="incredients" required>{{recipe.incredients}}</textarea><br><br>
 		<label for="instructions">Instructions:</label>
-		<input type="text" id="instructions" name="instructions" required value="{{recipe.instructions}}"><br><br>
-		<!--label for="picture">Picture:</label>
-		<input type="file" id="picture" name="picture" accept=".jpg"><br><br-->
+		<textarea type="text" id="instructions" name="instructions" required>{{recipe.instructions}}</textarea><br><br>
 		<label for="tags">Tags:</label>
 		<select name="tags" id="tags" multiple>
 			{% for tag in tags %}
 			<option value="{{tag.id}}"{% if tag['id'] in tagged %} selected{%endif%}>{{tag.name}}</option>
 			{% endfor %}
 		</select><br><br>
+		<input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
 		<input type="submit" value="Edit Recipe">
 		{{ recipe.tags }}
 	</form><br><br>

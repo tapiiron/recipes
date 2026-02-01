@@ -3,6 +3,7 @@ import re
 
 from flask import Flask
 from flask import render_template,flash,redirect,request,session,abort,make_response
+from werkzeug.security import secrets
 
 import markupsafe
 
@@ -17,7 +18,11 @@ app.secret_key = config.secret_key
 def checksession():
     if session.get("user_id") == None:
         abort(403)
-    
+
+def check_csrf():
+    if request.form["csrf_token"] != session["csrf_token"]:
+        abort(403)
+
 @app.route("/",methods=["GET","POST"])
 def index():
     tags = recipecontrol.list_tags()
@@ -59,6 +64,7 @@ def user_login():
         if user_id:
             session["user_id"] = user_id
             session["username"] = username
+            session["csrf_token"] = secrets.token_hex(16)
             return redirect("/")
         else:
             flash("Error: Invalid username or password")
@@ -76,6 +82,7 @@ def recipe_add():
         tags = recipecontrol.list_tags()
         return render_template("recipe_add.html",tags=tags)
     else:
+        check_csrf()
         user_id = session["user_id"]
         name = request.form["name"]
         incredients = request.form["incredients"]
@@ -105,6 +112,7 @@ def recipe_edit(id):
     if request.method == "GET":
         return render_template("recipe_edit.html",recipe=recipe[0],tags=tags,tagged=tagged)
     else:
+        check_csrf()
         tags = []
         if request.form.getlist("tags"):
             tags = request.form.getlist("tags")
@@ -118,6 +126,18 @@ def display_recipe(id):
         return render_template("recipe_display.html",recipe=recipe[0])
     else:
         return redirect("/")
+
+@app.route("/comment/add/<int:id>",methods=["POST"])
+def add_comment(id):
+    checksession()
+    check_csrf()
+    comment = request.form['comment']
+    grade = int(request.form['grade'])
+    if grade > 0 and grade < 11:
+        recipecontrol.add_comment(id,session['user_id'],comment,grade)
+    else:
+        flash("Wrong input for comment grade")
+
 
 @app.route("/recipe/remove/<int:id>")
 def remove_recipe(id):
