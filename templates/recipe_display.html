@@ -12,7 +12,7 @@
 	<p><h4>Instructions:</h4>{{recipe.instructions}}</p>
 	<p><h4>Tags:</h4>{{ recipe.tags }}</p>
 	<p><h4>Comments:</h4>
-	{% if comments == None %}
+	{% if comments == None or comments|length==0 %}
 	<h3>No comments</h3>
 	{% else %}
 	<h2>Average Grade: {{comments[0].average}}</h2>
