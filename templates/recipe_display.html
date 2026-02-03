@@ -15,6 +15,7 @@
 	{% if comments == None %}
 	<h3>No comments</h3>
 	{% else %}
+	<h2>Average Grade: {{comments[0].average}}</h2>
 	<table>
 		<tr><th>Comment</th><th>Grade</th><th> </th></tr>
 	{% for comment in comments %}
@@ -25,22 +26,22 @@
 	</table>
 	{%endif%}<br>
 	<form method="post" action="/comment/add/{{recipe.id}}">
+		<input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
 		<label for="comment">Comment</label>
 		<input type="text" id="comment" name="comment">
 		<label for="grade">Grade</label>
 		<select id="grade" name="grade">
 			<option value="1">1</option>
-			<option value="1">2</option>
-			<option value="1">3</option>
-			<option value="1">4</option>
-			<option value="1">5</option>
-			<option value="1">6</option>
-			<option value="1">7</option>
-			<option value="1" selected>8</option>
-			<option value="1">9</option>
-			<option value="1">10</option>
-		</select>
-		<input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
+			<option value="2">2</option>
+			<option value="3">3</option>
+			<option value="4">4</option>
+			<option value="5">5</option>
+			<option value="6">6</option>
+			<option value="7">7</option>
+			<option value="8" selected>8</option>
+			<option value="9">9</option>
+			<option value="10">10</option>
+		</select>		
 		<input type="submit" value="Add comment">
 	</form>
 	</p>
