@@ -122,8 +122,9 @@ def recipe_edit(id):
 @app.route("/recipe/display/<int:id>")
 def display_recipe(id):
     recipe = recipecontrol.load_recipe(id)
+    comments = recipecontrol.get_comments(id)
     if recipe:
-        return render_template("recipe_display.html",recipe=recipe[0])
+        return render_template("recipe_display.html",recipe=recipe[0],comments=comments)
     else:
         return redirect("/")
 
@@ -137,7 +138,16 @@ def add_comment(id):
         recipecontrol.add_comment(id,session['user_id'],comment,grade)
     else:
         flash("Wrong input for comment grade")
+    return redirect("/recipe/display/"+str(id))
 
+@app.route("/comment/delete/<int:id>",methods=["GET"])
+def delete_comment(id):
+    checksession()
+    comment=recipecontrol.get_comment(id)
+    if comment[0]['id_user'] != session['user_id']:
+        abort(401)
+    recipecontrol.delete_comment(id)
+    return redirect("/recipe/display/"+str(comment[0]['id_recipe']))
 
 @app.route("/recipe/remove/<int:id>")
 def remove_recipe(id):

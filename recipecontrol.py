@@ -70,3 +70,14 @@ def update_picture(id,picture):
 
 def add_comment(id_recipe,id_user,comment,grade):
     db.execute("insert into recipe_comment(id_recipe,id_user,comment,grade) values(?,?,?,?)",[id_recipe,id_user,comment,grade])
+
+def get_comments(id_recipe):
+    return db.query("select rc.id,rc.id_recipe,rc.id_user,u.username,rc.comment,rc.grade from recipe_comment rc, user u " \
+    "where rc.id_user=u.id and rc.id_recipe=?",[id_recipe])
+
+def get_comment(id):
+    return db.query("select id,id_recipe,id_user,comment,grade from recipe_comment where id=?",[id])
+
+def delete_comment(id):
+    db.execute("delete from recipe_comment where id=?",[id])
+    
