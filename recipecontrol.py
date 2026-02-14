@@ -1,15 +1,15 @@
 import db
 
 # Lists recipies (for front page)
-def list_recipies():
+def list_recipes():
     result = db.query("select id,id_user,name from recipe")
     if not result:
         return None
     else:
         return result
 
-def search_recipies(search,tag):
-    query="select id,id_user,name from recipe where (lower(name) like ? or lower(incredients) like ? or lower(instructions) like ?)"
+def search_recipes(search,tag):
+    query="select id,id_user,name from recipe where (lower(name) like ? or lower(ingredients) like ? or lower(instructions) like ?)"
     params=['%'+search+'%','%'+search+'%','%'+search+'%']
     if tag:
         query += " and id in (select id_recipe from recipe_tag where id_tag=?)"
@@ -21,7 +21,7 @@ def search_recipies(search,tag):
         return result
 
 def load_recipe(id):
-    result = db.query("select id,id_user,name,incredients,instructions,picture,ifnull(group_concat((select name from recipe_tag where id_recipe=r.id)),'') tags " \
+    result = db.query("select id,id_user,name,ingredients,instructions,picture,ifnull(group_concat((select name from recipe_tag where id_recipe=r.id)),'') tags " \
     "from recipe r where r.id=?",[id])
     if not result:
         return None
@@ -42,19 +42,19 @@ def list_tags():
     else:
         return result
 
-def add_recipe(id_user,name,incredients,instructions,tags):
-    db.execute("insert into recipe(id_user,name,incredients,instructions) values (?,?,?,?)", 
-               [id_user,name,incredients,instructions])
+def add_recipe(id_user,name,ingredients,instructions,tags):
+    db.execute("insert into recipe(id_user,name,ingredients,instructions) values (?,?,?,?)", 
+               [id_user,name,ingredients,instructions])
     result = db.query("select max(id) maxid from recipe")
     inserted_id= result[0]["maxid"]
     for tag in tags:
         db.execute("insert into recipe_tag(id_recipe,id_tag) values (?,?)",[inserted_id,tag])
 
-def update_recipe(id,name,incredients,instructions,tags):
+def update_recipe(id,name,ingredients,instructions,tags):
     db.execute("delete from recipe_tag where id_recipe=?",[id])
     for tag in tags:
         db.execute("insert into recipe_tag(id_recipe,id_tag) values (?,?)",[id,tag])
-    db.execute("update recipe set name=?,incredients=?,instructions=? where id=?",[name,incredients,instructions,id])
+    db.execute("update recipe set name=?,ingredients=?,instructions=? where id=?",[name,ingredients,instructions,id])
 
 def remove_recipe(id):
     db.execute("delete from recipe_comment where id_recipe=?",[id])

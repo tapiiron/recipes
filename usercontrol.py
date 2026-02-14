@@ -5,7 +5,7 @@ import db
 def create_user(username,password):
     password_hash = generate_password_hash(password)
     sql = "select username from user where username=?"
-    result = db.execute(sql, [username])
+    result = db.query(sql, [username])
     if not result:
         sql = "insert into user (username,password_hash) values(?,?)"
         db.execute(sql, [username,password_hash])

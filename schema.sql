@@ -8,7 +8,7 @@ create table recipe(
  id integer primary key autoincrement,
  id_user integer references user(id),
  name text,
- incredients text,
+ ingredients text,
  instructions text,
  picture blob
 );

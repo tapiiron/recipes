@@ -3,7 +3,7 @@ import re
 
 from flask import Flask
 from flask import render_template,flash,redirect,request,session,abort,make_response
-from werkzeug.security import secrets
+import secrets
 
 import markupsafe
 
@@ -27,10 +27,10 @@ def check_csrf():
 def index():
     tags = recipecontrol.list_tags()
     if request.method == "GET":
-        recipes = recipecontrol.list_recipies()
+        recipes = recipecontrol.list_recipes()
         return render_template("index.html",recipes=recipes,tags=tags)
     else:
-        recipes = recipecontrol.search_recipies(request.form["search"].lower(),request.form["tag"])
+        recipes = recipecontrol.search_recipes(request.form["search"].lower(),request.form["tag"])
         return render_template("index.html",recipes=recipes,tags=tags)
 
 @app.route("/user/register")
@@ -50,6 +50,7 @@ def user_create():
     except sqlite3.IntegrityError:
         flash("Error: Username already in use")
         return redirect("/user/register")
+    flash("Registered your username "+username+ ". You can now login.")
     return redirect("/user/login")
 
 @app.route("/user/login",methods=["GET","POST"])
@@ -85,16 +86,16 @@ def recipe_add():
         check_csrf()
         user_id = session["user_id"]
         name = request.form["name"]
-        incredients = request.form["incredients"]
+        ingredients = request.form["ingredients"]
         instructions = request.form["instructions"]
         # picture = request.form['picture']
         tags = []
         if request.form.getlist("tags"):
             tags = request.form.getlist("tags")
 
-        recipecontrol.add_recipe(user_id,name,incredients,instructions,tags)
+        recipecontrol.add_recipe(user_id,name,ingredients,instructions,tags)
         
-        # session["user_id"],request.form['name'],request.form['incredients'],request.form['instructions'],request.form['picture']
+        # session["user_id"],request.form['name'],request.form['ingredients'],request.form['instructions'],request.form['picture']
         flash("Recipe added")
         return redirect("/")
     
@@ -107,8 +108,10 @@ def recipe_edit(id):
     tags = recipecontrol.list_tags()
     tagged_raw=recipecontrol.list_recipe_tag_ids(id)
     tagged=[]
-    for tag in tagged_raw:
-        tagged.append(tag['id'])
+    if tagged_raw != None:
+        for tag in tagged_raw:
+            tagged.append(tag['id'])
+    
     if request.method == "GET":
         return render_template("recipe_edit.html",recipe=recipe[0],tags=tags,tagged=tagged)
     else:
@@ -116,7 +119,7 @@ def recipe_edit(id):
         tags = []
         if request.form.getlist("tags"):
             tags = request.form.getlist("tags")
-        recipecontrol.update_recipe(id,request.form['name'],request.form['incredients'],request.form['instructions'],tags)
+        recipecontrol.update_recipe(id,request.form['name'],request.form['ingredients'],request.form['instructions'],tags)
         return redirect("/recipe/edit/"+str(id))
     
 @app.route("/recipe/display/<int:id>")
