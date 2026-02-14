@@ -25,6 +25,7 @@
 	{%endfor%}
 	</table>
 	{%endif%}<br>
+	{% if session['user_id'] %}
 	<form method="post" action="/comment/add/{{recipe.id}}">
 		<input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
 		<label for="comment">Comment</label>
@@ -44,5 +45,6 @@
 		</select>		
 		<input type="submit" value="Add comment">
 	</form>
+	{%endif%}
 	</p>
 {% endblock %}
