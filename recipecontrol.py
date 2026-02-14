@@ -8,6 +8,25 @@ def list_recipes():
     else:
         return result
 
+def list_recipes_by_user(id_user):
+    result = db.query("select id,id_user,name from recipe where id_user=?",[id_user])
+    if not result:
+        return None
+    else:
+        return result
+
+def show_user_recipe_statistics(id_user):
+    result = db.query("select 'own_recipe_count' stat_name, count(*) stat_value from recipe where id_user=? "+
+    "union select 'own_avg_rating' stat_name,ifnull(avg(rc.grade),0) stat_value from recipe r, recipe_comment rc where r.id_user=? and r.id = rc.id_recipe and rc.grade is not null "+
+    "union select 'own_comments' stat_name,count(*) from recipe_comment where id_user=? "+
+    "union select 'comments_on_own_recipies' stat_name, count(*) from recipe_comment rc, recipe r where r.id_user=? and r.id = rc.id_recipe"
+    ,[id_user,id_user,id_user,id_user])
+    if not result:
+        return None
+    else:
+        return result    
+
+
 def search_recipes(search,tag):
     query="select id,id_user,name from recipe where (lower(name) like ? or lower(ingredients) like ? or lower(instructions) like ?)"
     params=['%'+search+'%','%'+search+'%','%'+search+'%']

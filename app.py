@@ -188,3 +188,10 @@ def upload_image(id):
     
     recipecontrol.update_picture(id,image)
     return redirect("/recipe/edit/"+str(id))
+
+@app.route("/user/show")
+def user_show():
+    checksession()
+    recipes = recipecontrol.list_recipes_by_user(session['user_id'])
+    statistics = recipecontrol.show_user_recipe_statistics(session['user_id'])
+    return render_template("user_page.html",recipes=recipes,statistics=statistics)

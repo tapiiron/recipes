@@ -8,7 +8,8 @@
 <body>
   <h1>Recipes for fun</h1>
     <div id="uppermenu">{% if session['user_id'] %}
-      Welcome, {{ session['username'] }} <a href="/user/logout">Logout</a>
+      Welcome, {{ session['username'] }} <a href="/user/logout">Logout</a><br>
+      <a href="/user/show">Own user page</a><br>
       {% else %}<a href="/user/register">Register</a> <a href="/user/login">Login</a>
       {% endif %}
     {% for message in get_flashed_messages() %}

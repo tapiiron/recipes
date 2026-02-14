@@ -1,0 +1,25 @@
+{% extends "page_layout.html" %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+	<h2>Recipes for fun - {{ session['username'] }}</h2>
+	<h3>Statistics</h3>
+	<table>
+	<tr><th>Stat name</th><th>Stat value</th></tr>
+	{% for stat in statistics %}
+	<tr><td>{{ stat['stat_name'] }}</td><td>{{ stat['stat_value'] }}</td></tr>
+	{% endfor %}
+	</table>
+	<h3>Own recipes</h3>
+	{% if recipes == None %}
+	<h3>You have no recipes yet</h3>
+	{% else %}
+	<table>
+	{% for recipe in recipes %}
+	<tr><td><a href="/recipe/display/{{recipe.id}}">{{recipe.name}}</a></td><td>{% if recipe.id_user==session['user_id'] %}<a href="/recipe/edit/{{recipe.id}}">Edit</a>{% endif %}</td></tr>
+	{% endfor %}
+	{% endif %}
+	</table>
+
+{% endblock %}
