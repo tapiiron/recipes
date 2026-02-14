@@ -30,8 +30,10 @@ def index():
         recipes = recipecontrol.list_recipes()
         return render_template("index.html",recipes=recipes,tags=tags)
     else:
-        recipes = recipecontrol.search_recipes(request.form["search"].lower(),request.form["tag"])
-        return render_template("index.html",recipes=recipes,tags=tags)
+        search = request.form["search"].lower()
+        tag = request.form["tag"]
+        recipes = recipecontrol.search_recipes(search,tag)
+        return render_template("index.html",recipes=recipes,tags=tags,search=search,searchtag=tag)
 
 @app.route("/user/register")
 def register():

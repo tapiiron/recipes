@@ -2,7 +2,7 @@ import db
 
 # Lists recipies (for front page)
 def list_recipes():
-    result = db.query("select id,id_user,name from recipe")
+    result = db.query("select id,id_user,name,(select username from user where id = id_user) owner from recipe")
     if not result:
         return None
     else:

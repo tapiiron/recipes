@@ -3,28 +3,30 @@
 {% block title %}Frontpage{% endblock %}
 
 {% block content %}
-<form method="POST" action="/">
+	<form method="POST" action="/">
 		<label for="search">Search recipes</label>
-		<input type="text" name="search" id="search">
-		<label for="tag">Tag</label>
-		<select name="tag">
+		<input type="text" name="search" id="search" {% if search %} value="{{ search }}" {% endif %}>
+		<select name="tag" id="tag">
 			<option value=""> </option>
 			{% for tag in tags %}
-			<option value="{{tag.id}}">{{tag.name}}</option>
+			<option value="{{tag.id}}" {% if searchtag and tag.id == searchtag %} selected {% endif %}>{{tag.name}}</option>
 			{% endfor %}
 		</select>
 		<input type="submit" value="Search">
-	</form><a href="/">Clear</a><br><br>	
+	</form><br><br>	
 	{% if recipes == None %}
 	<h3>No recipes available yet</h3>
 	{% else %}
-	<table>
+	<table class="recipelist">
 	{% for recipe in recipes %}
-	<tr><td><a href="/recipe/display/{{recipe.id}}">{{recipe.name}}</a></td><td>{% if recipe.id_user==session['user_id'] %}<a href="/recipe/edit/{{recipe.id}}">Edit</a>{% endif %}</td></tr>
+	<tr><td><a href="/recipe/display/{{recipe.id}}">{{recipe.name}}</a></td>
+		<td>by {{recipe.owner}}</td>
+		<td>{% if recipe.id_user==session['user_id'] %}<a href="/recipe/edit/{{recipe.id}}">Edit</a>{% endif %}</td>
+	</tr>
 	{% endfor %}
 	{% endif %}
-	</table>
+	</table><br><br>
 	{% if session["user_id"] %}
-	<a href="/recipe/add">Add recipe</a>
+	<a href="/recipe/add" style="padding-left: 1em; padding-bottom: 1em;">Add recipe</a>
 	{% endif %}
 {% endblock %}

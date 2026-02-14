@@ -28,7 +28,7 @@
 	<form method="post" action="/comment/add/{{recipe.id}}">
 		<input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
 		<label for="comment">Comment</label>
-		<input type="text" id="comment" name="comment">
+		<input type="text" id="comment" name="comment"><br>
 		<label for="grade">Grade</label>
 		<select id="grade" name="grade">
 			<option value="1">1</option>

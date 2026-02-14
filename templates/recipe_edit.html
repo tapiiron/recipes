@@ -17,9 +17,9 @@
 		<label for="name">Name of the Recipe:</label>
 		<input type="text" id="name" name="name" required value="{{recipe.name}}"><br><br>
 		<label for="ingredients">Ingredients:</label>
-		<textarea type="text" id="ingredients" name="ingredients" required>{{recipe.ingredients}}</textarea><br><br>
+		<textarea type="text" id="ingredients" name="ingredients" required cols="50" rows="10">{{recipe.ingredients}}</textarea><br><br>
 		<label for="instructions">Instructions:</label>
-		<textarea type="text" id="instructions" name="instructions" required>{{recipe.instructions}}</textarea><br><br>
+		<textarea type="text" id="instructions" name="instructions" required cols="50" rows="10">{{recipe.instructions}}</textarea><br><br>
 		<label for="tags">Tags:</label>
 		<select name="tags" id="tags" multiple>
 			{% for tag in tags %}
@@ -27,8 +27,8 @@
 			{% endfor %}
 		</select><br><br>
 		<input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
-		<input type="submit" value="Edit Recipe">
-		{{ recipe.tags }}
+		<label for="edit">&nbsp;</label>
+		<input type="submit" id="edit" value="Edit Recipe">
 	</form><br><br>
 	<a href="/recipe/remove/{{recipe.id}}">Remove this recipe</a>
 {% endblock %}

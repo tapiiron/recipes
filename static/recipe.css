@@ -1,0 +1,55 @@
+body {
+  margin: auto;
+  max-width: 75em;
+  font-family: sans-serif;
+  background-color: white;
+}
+
+label {
+    float: left;
+    width: 10em;
+    margin-right: 1em;
+    text-align: right;
+}
+
+h2 {
+    padding-left: 1em;
+}
+
+.menu {
+    border: 1px solid black;
+    height: 4em;
+    margin-bottom: 20px;
+}
+
+.menuleft {
+    text-align: left;
+    float: left;
+    margin-left: 10px;
+}
+
+.menuright {
+    text-align: right;
+    float: right;
+    margin-right: 10px;
+}
+
+.messagebox {
+    color: red;
+    text-align: center;
+}
+
+.content {
+    border: 1px solid black;
+    text-align: left;
+    padding-bottom: 1em;
+    padding-top: 1em;
+}
+
+.recipelist {
+    margin-left: 1em;
+}
+
+table, th, td {
+  border: 1px solid black;
+}

@@ -2,24 +2,31 @@
 <html>
 
 <head>
+   <link rel="stylesheet" href="/static/recipe.css">
   <title>{% block title %}{% endblock %}</title>
 </head>
 
 <body>
   <h1>Recipes for fun</h1>
-    <div id="uppermenu">{% if session['user_id'] %}
+    <div id="uppermenu" class="menu">
+      {% if request.endpoint != 'index' %}<p class="menuleft"><a href="/">Back to recipe list</a></p>{% endif %}
+      {% if session['user_id'] %}
+      <p class="menuright">
       Welcome, {{ session['username'] }} <a href="/user/logout">Logout</a><br>
       <a href="/user/show">Own user page</a><br>
-      {% else %}<a href="/user/register">Register</a> <a href="/user/login">Login</a>
+      </p>
+      {% else %}<p class="menuright"><a href="/user/register">Register</a></p> <p class="menuright"><a href="/user/login">Login</a></p>
       {% endif %}
-    {% for message in get_flashed_messages() %}
-    <p>
-      <b>{{ message }}</b>
-    </p>
-    {% endfor %}
+    <div id="messagebox" class="messagebox">
+      {% for message in get_flashed_messages() %}
+      <p>
+        <b>{{ message }}</b>
+      </p>
+    
+      {% endfor %}
+      </div>
     </div>
-    <div id="content">
-      <a href="/">Back to recipe list</a><br><br>
+    <div id="content" class="content">
         {% block content %}
         {% endblock %}
     </div>
