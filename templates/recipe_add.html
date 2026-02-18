@@ -9,9 +9,9 @@
 		<label for="name">Name of the Recipe:</label>
 		<input type="text" id="name" name="name" required><br><br>
 		<label for="ingredients">Ingredients:</label>
-		<textarea type="text" id="ingredients" name="ingredients" required></textarea><br><br>
+		<textarea type="text" id="ingredients" name="ingredients" required cols="80" rows="20"></textarea><br><br>
 		<label for="instructions">Instructions:</label>
-		<textarea type="text" id="instructions" name="instructions" required></textarea><br><br>
+		<textarea type="text" id="instructions" name="instructions" required cols="80" rows="20"></textarea><br><br>
 		<label for="tags">Tags:</label>
 		<select name="tags" id="tags" multiple>
 			{% for tag in tags %}

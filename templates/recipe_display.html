@@ -8,6 +8,7 @@
 	{% if recipe.picture != None %}
 		<div id="imagecontainer"><img src="/recipe/image/get/{{recipe.id}}" alt="recipeimage"></div>
 	{%endif%}
+    <div class="recipedisplay">
     <p><h4>Ingredients:</h4><pre>{{recipe.ingredients}}</pre></p>
     <p><h4>Instructions:</h4><pre>{{recipe.instructions}}</pre></p>
 	<p><h4>Tags:</h4>
@@ -55,4 +56,5 @@
 	</form>
 	{%endif%}
 	</p>
+	</div>
 {% endblock %}

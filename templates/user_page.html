@@ -4,7 +4,8 @@
 
 {% block content %}
 	<h2>Your userpage, {{ session['username'] }}</h2>
-	<h3>Statistics</h3>
+	<h3 style="padding-left: 2em">Statistics</h3>
+    <div class="recipedisplay">
 	<table>
 	<tr><th>Stat name</th><th>Stat value</th></tr>
 	{% for stat in statistics %}
@@ -21,5 +22,5 @@
 	{% endfor %}
 	{% endif %}
 	</table>
-
+	</div>
 {% endblock %}

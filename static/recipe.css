@@ -50,6 +50,10 @@ h2 {
     margin-left: 1em;
 }
 
+.recipedisplay {
+    margin-left: 2em;
+}
+
 table, th, td {
   border: 1px solid black;
 }
