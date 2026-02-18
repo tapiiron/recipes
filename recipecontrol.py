@@ -40,7 +40,7 @@ def search_recipes(search,tag):
         return result
 
 def load_recipe(id):
-    result = db.query("select id,id_user,name,ingredients,instructions,picture from recipe r where r.id=?",[id])
+    result = db.query("select id,id_user,name,ingredients,instructions,picture,(select username from user where id = id_user) owner from recipe r where r.id=?",[id])
     if not result:
         return None
     else:

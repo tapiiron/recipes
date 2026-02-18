@@ -4,7 +4,7 @@
 
 {% block content %}
 
-	<h2>Display Recipe {{recipe.name}}</h2>
+	<h2>Display Recipe {{recipe.name}} by {{recipe.owner}}</h2>
 	{% if recipe.picture != None %}
 		<div id="imagecontainer"><img src="/recipe/image/get/{{recipe.id}}" alt="recipeimage"></div>
 	{%endif%}
