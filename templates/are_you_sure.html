@@ -1,0 +1,16 @@
+{% extends "page_layout.html" %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+	<h2>Item deletion page</h2>
+	<h3>Are you sure?</h3>
+	{% if phase == 3 %}
+    <b>Are you SURE SURE?</b>
+    {% endif %}
+	Are you sure you want to delete {{ item }}? <br>
+    <a href="/delete/{{item}}/{{id}}/{{phase}}">Yes</a><br>
+    <a href="/">No, abort deletion</a>
+<br><br>
+
+{% endblock %}

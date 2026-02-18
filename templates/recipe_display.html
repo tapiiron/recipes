@@ -29,7 +29,7 @@
 	{% for comment in comments %}
 	<tr><td>{{ comment.comment }}</td>
 	    <td>{{ comment.grade }}</td>
-		<td>{% if session['user_id']==comment['id_user'] %}<a href="/comment/delete/{{comment.id}}">X</a>{%endif%}</td></tr>
+		<td>{% if session['user_id']==comment['id_user'] %}<a href="/delete/comment/{{comment.id}}/1">X</a>{%endif%}</td></tr>
 	{%endfor%}
 	</table>
 	{%endif%}<br>

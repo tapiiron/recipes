@@ -198,3 +198,20 @@ def user_show():
     recipes = recipecontrol.list_recipes_by_user(session['user_id'])
     statistics = recipecontrol.show_user_recipe_statistics(session['user_id'])
     return render_template("user_page.html",recipes=recipes,statistics=statistics)
+
+@app.route("/delete/<item>/<int:id>/<int:phase>",methods=['GET'])
+def delete_item(item,id,phase):
+    checksession()
+    if item == None or id < 1 or phase < 1:
+        abort(403)
+    if phase > 2:
+        print("tick")
+        if item == 'comment':
+            return redirect(f"/comment/delete/{id}")
+        elif item == 'recipe':
+            return redirect(f"/recipe/remove/{id}")
+        else:
+            abort(403)
+    else:
+        phase = phase + 1
+        return render_template("are_you_sure.html",item=item,id=id,phase=phase)
