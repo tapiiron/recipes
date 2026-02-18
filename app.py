@@ -127,9 +127,10 @@ def recipe_edit(id):
 @app.route("/recipe/display/<int:id>")
 def display_recipe(id):
     recipe = recipecontrol.load_recipe(id)
+    recipetags = recipecontrol.load_recipe_tags(id)
     comments = recipecontrol.get_comments(id)
     if recipe:
-        return render_template("recipe_display.html",recipe=recipe[0],comments=comments)
+        return render_template("recipe_display.html",recipe=recipe[0],recipetags=recipetags,comments=comments)
     else:
         return redirect("/")
 

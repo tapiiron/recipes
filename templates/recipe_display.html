@@ -8,9 +8,17 @@
 	{% if recipe.picture != None %}
 		<div id="imagecontainer"><img src="/recipe/image/get/{{recipe.id}}" alt="recipeimage"></div>
 	{%endif%}
-	<p><h4>Ingredients:</h4>{{recipe.ingredients}}</p>
-	<p><h4>Instructions:</h4>{{recipe.instructions}}</p>
-	<p><h4>Tags:</h4>{{ recipe.tags }}</p>
+    <p><h4>Ingredients:</h4><pre>{{recipe.ingredients}}</pre></p>
+    <p><h4>Instructions:</h4><pre>{{recipe.instructions}}</pre></p>
+	<p><h4>Tags:</h4>
+{% if recipetags == None %}
+<h3>No tags</h3>
+{% else %}
+{% for rt in recipetags %}
+{{rt.name}}
+{%endfor%}
+{%endif%}
+</p>
 	<p><h4>Comments:</h4>
 	{% if comments == None or comments|length==0 %}
 	<h3>No comments</h3>

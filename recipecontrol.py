@@ -40,13 +40,19 @@ def search_recipes(search,tag):
         return result
 
 def load_recipe(id):
-    result = db.query("select id,id_user,name,ingredients,instructions,picture,ifnull(group_concat((select name from recipe_tag where id_recipe=r.id)),'') tags " \
-    "from recipe r where r.id=?",[id])
+    result = db.query("select id,id_user,name,ingredients,instructions,picture from recipe r where r.id=?",[id])
     if not result:
         return None
     else:
         return result
-    
+
+def load_recipe_tags(id):
+    result = db.query("select t.name from recipe_tag rt, tag t where rt.id_recipe=? and rt.id_tag=t.id",[id])
+    if not result:
+        return None
+    else:
+        return result
+
 def list_recipe_tag_ids(id):
     result = db.query("select ''||id_tag id from recipe_tag where id_recipe=?",[id])
     if not result:
