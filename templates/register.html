@@ -12,6 +12,7 @@
 		<label for="password">Retype password:</label>
 		<input type="password" id="password2" name="password2" required><br><br>
 		<label for="create">&nbsp;</label>
+		<input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
 		<input type="submit" id="create" value="Create user"/>
 	</form>
 {% endblock %}

@@ -12,6 +12,7 @@
 			<option value="{{tag.id}}" {% if searchtag and tag.id == searchtag %} selected {% endif %}>{{tag.name}}</option>
 			{% endfor %}
 		</select>
+		<input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
 		<input type="submit" value="Search">
 	</form><br><br>	
 	{% if recipes == None %}

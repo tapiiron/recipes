@@ -10,6 +10,7 @@
 		<label for="password">Password:</label>
 		<input type="password" id="password" name="password" required><br><br>
 		<label for="login">&nbsp;</label>
+		<input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
 		<input type="submit" id="login" value="Login">
 	</form>
 {% endblock %}

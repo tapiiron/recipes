@@ -28,7 +28,7 @@ def show_user_recipe_statistics(id_user):
 
 
 def search_recipes(search,tag):
-    query="select id,id_user,name from recipe where (lower(name) like ? or lower(ingredients) like ? or lower(instructions) like ?)"
+    query="select id,id_user,name,(select username from user where id = id_user) owner from recipe where (lower(name) like ? or lower(ingredients) like ? or lower(instructions) like ?)"
     params=['%'+search+'%','%'+search+'%','%'+search+'%']
     if tag:
         query += " and id in (select id_recipe from recipe_tag where id_tag=?)"

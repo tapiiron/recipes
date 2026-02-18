@@ -16,7 +16,7 @@ app = Flask(__name__)
 app.secret_key = config.secret_key
 
 def checksession():
-    if session.get("user_id") == None:
+    if session.get("user_id") is None:
         abort(403)
 
 def check_csrf():
@@ -25,11 +25,14 @@ def check_csrf():
 
 @app.route("/",methods=["GET","POST"])
 def index():
+    if session.get("csrf_token") is None:
+        session["csrf_token"] = secrets.token_hex(16)
     tags = recipecontrol.list_tags()
     if request.method == "GET":
         recipes = recipecontrol.list_recipes()
         return render_template("index.html",recipes=recipes,tags=tags)
     else:
+        check_csrf()
         search = request.form["search"].lower()
         tag = request.form["tag"]
         recipes = recipecontrol.search_recipes(search,tag)
@@ -37,10 +40,13 @@ def index():
 
 @app.route("/user/register")
 def register():
+    if session.get("csrf_token") is None:
+        session["csrf_token"] = secrets.token_hex(16)
     return render_template("register.html")
 
 @app.route("/user/create",methods=["POST"])
 def user_create():
+    check_csrf()
     username = request.form["username"]
     password = request.form["password"]
     password2 = request.form["password2"]
@@ -57,9 +63,12 @@ def user_create():
 
 @app.route("/user/login",methods=["GET","POST"])
 def user_login():
+    if session.get("csrf_token") is None:
+        session["csrf_token"] = secrets.token_hex(16)
     if request.method == "GET":
         return render_template("login.html")
     else:
+        check_csrf()
         username = request.form["username"].lower()
         password = request.form["password"]
 
@@ -75,7 +84,9 @@ def user_login():
 
 @app.route("/user/logout")
 def user_logout():
-    session.clear()
+    session['user_id'] = None
+    session['username'] = None
+    session["csrf_token"] = secrets.token_hex(16)
     return redirect("/")
 
 @app.route("/recipe/add",methods=["GET","POST"])
@@ -147,7 +158,6 @@ def add_comment(id):
         flash("Wrong input for comment grade")
     return redirect("/recipe/display/"+str(id))
 
-@app.route("/comment/delete/<int:id>",methods=["GET"])
 def delete_comment(id):
     checksession()
     comment=recipecontrol.get_comment(id)
@@ -157,7 +167,6 @@ def delete_comment(id):
     flash("Comment deleted")
     return redirect("/recipe/display/"+str(comment[0]['id_recipe']))
 
-@app.route("/recipe/remove/<int:id>")
 def remove_recipe(id):
     checksession()
     recipe = recipecontrol.load_recipe(id)
@@ -179,6 +188,7 @@ def show_recipe_image(id):
 @app.route("/recipe/image/upload/<int:id>",methods=['POST'])
 def upload_image(id):
     checksession()
+    check_csrf()
     file = request.files['image']
     if not file.filename.endswith(".jpg"):
         flash("ERROR: wrong picture format")
@@ -201,16 +211,20 @@ def user_show():
     statistics = recipecontrol.show_user_recipe_statistics(session['user_id'])
     return render_template("user_page.html",recipes=recipes,statistics=statistics)
 
-@app.route("/delete/<item>/<int:id>/<int:phase>",methods=['GET'])
+@app.route("/delete/<item>/<int:id>/<int:phase>",methods=['GET','POST'])
 def delete_item(item,id,phase):
     checksession()
     if item == None or id < 1 or phase < 1:
         abort(403)
+    if request.method == 'GET':
+        phase = phase + 1
+        return render_template("are_you_sure.html",item=item,id=id,phase=phase)
+    check_csrf()
     if phase > 2:
         if item == 'comment':
-            return redirect(f"/comment/delete/{id}")
+            return delete_comment(id)
         elif item == 'recipe':
-            return redirect(f"/recipe/remove/{id}")
+            return remove_recipe(id)
         else:
             abort(403)
     else:

@@ -6,10 +6,13 @@
 	<h2>Item deletion page</h2>
 	<h3>Are you sure?</h3>
 	{% if phase == 3 %}
-    <b>Are you SURE SURE?</b>
+    <b>Are you SURE SURE?</b><br>
     {% endif %}
 	Are you sure you want to delete {{ item }}? <br>
-    <a href="/delete/{{item}}/{{id}}/{{phase}}">Yes</a><br>
+	<form method="post" action="/delete/{{item}}/{{id}}/{{phase}}">
+        <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+        <input type="submit" value="Yes">
+    </form>
     <a href="/">No, abort deletion</a>
 <br><br>
 
