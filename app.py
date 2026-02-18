@@ -122,6 +122,7 @@ def recipe_edit(id):
         if request.form.getlist("tags"):
             tags = request.form.getlist("tags")
         recipecontrol.update_recipe(id,request.form['name'],request.form['ingredients'],request.form['instructions'],tags)
+        flash("You have successfully edited the recipe")
         return redirect("/recipe/edit/"+str(id))
     
 @app.route("/recipe/display/<int:id>")
@@ -170,7 +171,6 @@ def show_recipe_image(id):
     image = recipecontrol.get_image(id)
     if not image:
         abort(404)
-
     response = make_response(bytes(image))
     response.headers.set("Content-Type", "image/jpeg")
     return response
@@ -190,6 +190,7 @@ def upload_image(id):
         return redirect("/recipe/edit/"+str(id))
     
     recipecontrol.update_picture(id,image)
+    flash("You have successfully added image to recipe")
     return redirect("/recipe/edit/"+str(id))
 
 @app.route("/user/show")
@@ -205,7 +206,6 @@ def delete_item(item,id,phase):
     if item == None or id < 1 or phase < 1:
         abort(403)
     if phase > 2:
-        print("tick")
         if item == 'comment':
             return redirect(f"/comment/delete/{id}")
         elif item == 'recipe':
