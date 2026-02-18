@@ -154,6 +154,7 @@ def delete_comment(id):
     if comment[0]['id_user'] != session['user_id']:
         abort(401)
     recipecontrol.delete_comment(id)
+    flash("Comment deleted")
     return redirect("/recipe/display/"+str(comment[0]['id_recipe']))
 
 @app.route("/recipe/remove/<int:id>")
