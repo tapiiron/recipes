@@ -1,13 +1,9 @@
 import sqlite3
-import re
 
 from flask import Flask
 from flask import render_template,flash,redirect,request,session,abort,make_response
 import secrets
 
-import markupsafe
-
-import db
 import usercontrol
 import recipecontrol
 import config
@@ -47,11 +43,14 @@ def register():
 @app.route("/user/create",methods=["POST"])
 def user_create():
     check_csrf()
-    username = request.form["username"]
+    username = request.form["username"].lower()
     password = request.form["password"]
     password2 = request.form["password2"]
     if password != password2:
         flash("Error: Passwords do not match!")
+        return redirect("/user/register")
+    if len(username) < 3 or len(username) > 30:
+        flash("Error: Username must be between 3 and 30 characters long")
         return redirect("/user/register")
     try:
         usercontrol.create_user(username,password)
@@ -71,7 +70,9 @@ def user_login():
         check_csrf()
         username = request.form["username"].lower()
         password = request.form["password"]
-
+        if len(username) < 3 or len(username) > 30:
+            flash("Error: Username must be between 3 and 30 characters long")
+            return redirect("/user/login")
         user_id = usercontrol.check_login(username,password)
         if user_id:
             session["user_id"] = user_id
@@ -101,14 +102,14 @@ def recipe_add():
         name = request.form["name"]
         ingredients = request.form["ingredients"]
         instructions = request.form["instructions"]
-        # picture = request.form['picture']
         tags = []
         if request.form.getlist("tags"):
             tags = request.form.getlist("tags")
+        if len(name) > 50 or len(ingredients) > 3000 or len(instructions) > 3000:
+            flash("Name (max 50 letters), ingredients or instructions field is too long (max 3000 letters), please shorten it.")
+            return redirect("/recipe/add")
 
         recipecontrol.add_recipe(user_id,name,ingredients,instructions,tags)
-        
-        # session["user_id"],request.form['name'],request.form['ingredients'],request.form['instructions'],request.form['picture']
         flash("Recipe added")
         return redirect("/")
     
@@ -132,6 +133,9 @@ def recipe_edit(id):
         tags = []
         if request.form.getlist("tags"):
             tags = request.form.getlist("tags")
+        if len(request.form['name']) > 50 or len(request.form['ingredients']) > 3000 or len(request.form['instructions']) > 3000:
+            flash("Name (max 50 letters), ingredients or instructions field is too long (max 3000 letters), please shorten it.")
+            return redirect("/recipe/edit/"+str(id))
         recipecontrol.update_recipe(id,request.form['name'],request.form['ingredients'],request.form['instructions'],tags)
         flash("You have successfully edited the recipe")
         return redirect("/recipe/edit/"+str(id))
@@ -152,6 +156,9 @@ def add_comment(id):
     check_csrf()
     comment = request.form['comment']
     grade = int(request.form['grade'])
+    if len(comment) > 3000:
+        flash("Comment is too long (max 3000 letters), please shorten it.")
+        return redirect("/recipe/display/"+str(id))
     if grade > 0 and grade < 11:
         recipecontrol.add_comment(id,session['user_id'],comment,grade)
     else:
